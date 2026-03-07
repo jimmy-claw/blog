@@ -117,7 +117,7 @@
 </p>
 
 <ul>
-  <li>Artist encrypts the song and uploads it to <strong>Codex</strong> (Logos' decentralized storage)</li>
+  <li>Artist encrypts the song and uploads it to <strong>Logos Storage</strong> (Logos' decentralized storage)</li>
   <li>Artist posts a listing on-chain: CID, price, and a commitment to the encryption key</li>
   <li>Buyer initiates a purchase; a hashlock escrow is created on-chain</li>
   <li>Artist confirms by setting the hashlock (SHA-256 of the decryption key)</li>
@@ -173,7 +173,7 @@ HTLCInstruction::Claim { preimage } => {
 
 <div class="demo-output">
 <span class="step">→ Artist uploading song...</span><br>
-&nbsp;&nbsp;Uploaded to Codex: bafyc62a2881b072fc443dbe1cae86b0aae97f4587d5<br>
+&nbsp;&nbsp;Uploaded to Logos Storage: bafyc62a2881b072fc443dbe1cae86b0aae97f4587d5<br>
 &nbsp;&nbsp;Waiting for TX confirmation...<br>
 &nbsp;&nbsp;<span class="ok">✓ Song listed!</span> ID: 3cbf185f1c94cf45...<br>
 &nbsp;&nbsp;Metadata CID: bafy841c164e...<br>
@@ -196,7 +196,7 @@ HTLCInstruction::Claim { preimage } => {
 &nbsp;&nbsp;<span class="ok">✓ Payment claimed</span><br>
 <br>
 <span class="step">→ Buyer decrypting song...</span><br>
-&nbsp;&nbsp;Downloading encrypted song from Codex...<br>
+&nbsp;&nbsp;Downloading encrypted song from Logos Storage...<br>
 &nbsp;&nbsp;<span class="ok">✓ Song decrypted and saved to ./downloads/demo-song.mp3</span><br>
 &nbsp;&nbsp;<span class="ok">✓ Content verified — decrypted file matches original!</span><br>
 <br>
