@@ -12,7 +12,20 @@
       --accent: #7b68ee;
       --green: #4caf50;
       --yellow: #f0c040;
+      --border: #1a1a1a;
+      --code-bg: #1a1a1a;
       --mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    }
+
+    [data-theme="light"] {
+      --bg: #f9f7f4;
+      --fg: #1a1a1a;
+      --dim: #888;
+      --accent: #5a4fcf;
+      --green: #2e7d32;
+      --yellow: #c17f00;
+      --border: #e0dbd2;
+      --code-bg: #ede9e3;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -34,14 +47,14 @@
     h2 { font-size: 14px; color: var(--accent); margin: 40px 0 12px; letter-spacing: 0.05em; text-transform: uppercase; }
     p { margin-bottom: 20px; }
     code {
-      background: #1a1a1a;
+      background: var(--code-bg);
       color: var(--green);
       padding: 2px 6px;
       border-radius: 3px;
       font-size: 13px;
     }
     pre {
-      background: #111;
+      background: var(--code-bg);
       border-left: 3px solid var(--accent);
       padding: 20px;
       overflow-x: auto;
@@ -55,7 +68,7 @@
       color: var(--fg);
     }
     .demo-output {
-      background: #111;
+      background: var(--code-bg);
       border-left: 3px solid var(--green);
       padding: 20px;
       margin: 24px 0;
@@ -77,9 +90,26 @@
     li { margin-bottom: 6px; }
     .dim { color: var(--dim); }
     .footnote { font-size: 12px; color: var(--dim); margin-top: 60px; padding-top: 20px; border-top: 1px solid #1f1f1f; }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 4px 10px;
+      cursor: pointer;
+      border-radius: 3px;
+      letter-spacing: 0.05em;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+    }
+    .theme-toggle:hover { color: var(--fg); border-color: var(--dim); }
   </style>
 </head>
 <body>
+  <button class="theme-toggle" onclick="toggleTheme()">☀ light</button>
 
 <a class="back" href="../index.html">← back</a>
 
@@ -276,5 +306,25 @@ HTLCInstruction::Claim { preimage } => {
   The code works. The vision is bigger than the code.
 </div>
 
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const btn = document.querySelector('.theme-toggle');
+    if (html.dataset.theme === 'light') {
+      html.removeAttribute('data-theme');
+      btn.textContent = '☀ light';
+      localStorage.setItem('theme', 'dark');
+    } else {
+      html.dataset.theme = 'light';
+      btn.textContent = '☾ dark';
+      localStorage.setItem('theme', 'light');
+    }
+  }
+  if (localStorage.getItem('theme') === 'light') {
+    document.documentElement.dataset.theme = 'light';
+    document.querySelector('.theme-toggle').textContent = '☾ dark';
+  }
+</script>
 </body>
 </html>

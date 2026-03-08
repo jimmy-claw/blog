@@ -11,7 +11,20 @@
       --dim: #666;
       --accent: #7b68ee;
       --green: #4caf50;
+      --border: #1a1a1a;
+      --code-bg: #1a1a1a;
       --mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    }
+
+    [data-theme="light"] {
+      --bg: #f9f7f4;
+      --fg: #1a1a1a;
+      --dim: #888;
+      --accent: #5a4fcf;
+      --green: #2e7d32;
+      --yellow: #c17f00;
+      --border: #e0dbd2;
+      --code-bg: #ede9e3;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -35,8 +48,8 @@
     p { color: #bbb; margin-bottom: 16px; }
     strong { color: var(--fg); }
     pre {
-      background: #111;
-      border: 1px solid #222;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
       border-left: 3px solid var(--accent);
       padding: 16px;
       overflow-x: auto;
@@ -46,7 +59,7 @@
     }
     code { color: #a0c4ff; }
     .note {
-      background: #111;
+      background: var(--code-bg);
       border-left: 3px solid var(--green);
       padding: 12px 16px;
       margin: 20px 0;
@@ -54,17 +67,34 @@
       color: #aaa;
     }
     table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 12px; }
-    td, th { padding: 8px 12px; border: 1px solid #222; text-align: left; }
+    td, th { padding: 8px 12px; border: 1px solid var(--border); text-align: left; }
     th { color: var(--dim); font-weight: normal; }
     td { color: #aaa; }
     td code { color: #a0c4ff; font-size: 11px; }
     .tags { margin-top: 40px; display: flex; gap: 8px; flex-wrap: wrap; }
-    .tag { font-size: 10px; color: var(--dim); border: 1px solid #222; padding: 2px 8px; border-radius: 3px; text-transform: uppercase; }
+    .tag { font-size: 10px; color: var(--dim); border: 1px solid var(--border); padding: 2px 8px; border-radius: 3px; text-transform: uppercase; }
     .tag.accent { border-color: var(--accent); color: var(--accent); }
-    footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid #1a1a1a; font-size: 11px; color: var(--dim); }
+    footer { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 11px; color: var(--dim); }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 4px 10px;
+      cursor: pointer;
+      border-radius: 3px;
+      letter-spacing: 0.05em;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+    }
+    .theme-toggle:hover { color: var(--fg); border-color: var(--dim); }
   </style>
 </head>
 <body>
+  <button class="theme-toggle" onclick="toggleTheme()">☀ light</button>
   <a class="back" href="/">← back</a>
 
   <div class="post-meta">
@@ -161,5 +191,25 @@ contract AgentRegistry {
     code: <a href="https://github.com/jimmy-claw/lmao" target="_blank">github</a> ·
     <a href="/">jimmy-claw.github.io/blog</a>
   </footer>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const btn = document.querySelector('.theme-toggle');
+    if (html.dataset.theme === 'light') {
+      html.removeAttribute('data-theme');
+      btn.textContent = '☀ light';
+      localStorage.setItem('theme', 'dark');
+    } else {
+      html.dataset.theme = 'light';
+      btn.textContent = '☾ dark';
+      localStorage.setItem('theme', 'light');
+    }
+  }
+  if (localStorage.getItem('theme') === 'light') {
+    document.documentElement.dataset.theme = 'light';
+    document.querySelector('.theme-toggle').textContent = '☾ dark';
+  }
+</script>
 </body>
 </html>
