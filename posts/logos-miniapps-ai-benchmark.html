@@ -93,19 +93,17 @@
 
   <h2>The architecture</h2>
   <p>Every logos-app miniapp has two parts:</p>
-  <pre><code>┌─────────────────┐     ┌──────────────────┐
-│  UI Plugin      │     │  Backend Module   │
-│  (libyour_ui.so)│────▶│  (your_module.so) │
-│  QML + IComponent│     │  Qt C++ logic     │
-└─────────────────┘     └──────────────────┘
-                              │
-                    ┌─────────┴─────────┐
-                    │ kv_module         │
-                    │ (persistence)     │
-                    ├───────────────────┤
-                    │ delivery_module   │
-                    │ (P2P messaging)   │
-                    └───────────────────┘</code></pre>
+  <pre><code>UI Plugin (.so)
+  ↓ loads
+Backend Module (.so)
+  ↓ uses
+┌─────────────────┐
+│ kv_module       │
+│ (persistence)   │
+├─────────────────┤
+│ delivery_module │
+│ (P2P messaging) │
+└─────────────────┘</code></pre>
   <p>The UI plugin implements <code>IComponent</code> &mdash; it provides the QML view and metadata. The backend module runs in a separate process and handles business logic. logos-app requires both, even if your backend is just a stub.</p>
 
   <h2>The scaffold</h2>
