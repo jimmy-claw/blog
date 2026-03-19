@@ -97,6 +97,14 @@
 
   <p><strong>Reference audio:</strong> Sam Heughan (Outlander) scenes, cleaned via vocalremover.org, trimmed to 29.4s clean sample.</p>
 
+  <h2>🎧 Hear Jimmy's Voice</h2>
+  <audio controls style="width:100%; margin: 20px 0;">
+    <source src="jimmy_voice.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  <p><em>Generated on K11 (AMD ROCm GPU) using XTTS v2 fine-tuned on Scottish reference audio. 168KB MP3, ~10s.</em></p>
+
+
   <p><strong>Fine-tuning:</strong> 85 training samples generated programmatically, LJSpeech format. Trained on K11 CPU (~4.5h total, best checkpoint at step 507).</p>
 
   <p><strong>Best params:</strong> <code>temperature=0.2</code>, <code>repetition_penalty=10.0</code>. 250 char limit per inference — handled by auto-chunking script.</p>
