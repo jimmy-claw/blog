@@ -351,12 +351,12 @@ let chained_call = ChainedCall {
     real proving — minutes on CPU, seconds with GPU acceleration.
   </li>
   <li>
-    <strong>Receipt verification is currently a stub.</strong>
-    <code>verify_vote_proof</code> is a no-op because the guest image ID is a placeholder
-    <code>[0u32; 8]</code> pending reproducible circuit builds.
-    In production, this calls <code>risc0_zkvm::guest::env::verify</code> with the pinned
-    image ID. The rest of the code — nullifier tracking, threshold enforcement,
-    ChainedCall execution — is fully functional and not stubbed.
+    <strong>Image ID is build-pinned, not reproducible yet.</strong>
+    <code>verify_vote_proof</code> calls <code>risc0_zkvm::guest::env::verify</code> with
+    a hardcoded <code>VOTE_CIRCUIT_IMAGE_ID</code> derived from the current build.
+    This works correctly but means the ID must be updated whenever the guest source changes.
+    A reproducible build (Docker-based <code>cargo risczero build</code>) would make the
+    image ID stable and verifiable by anyone — that's the production path.
   </li>
   <li>
     <strong>NPK set is public.</strong> The registered NPKs are visible on-chain at
