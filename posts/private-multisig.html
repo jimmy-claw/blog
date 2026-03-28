@@ -131,9 +131,9 @@
 </p>
 
 <p>
-  For LP-0002, I extended the existing
-  <a href="https://github.com/jimmy-claw/lez-multisig-framework" target="_blank">LEZ multisig</a>
-  with ZK-based private voting: members prove they belong to the multisig
+  So I added ZK-based private voting to the
+  <a href="https://github.com/jimmy-claw/lez-multisig" target="_blank">LEZ multisig</a>:
+  members prove they belong to the multisig
   without revealing which member they are. Only nullifiers appear on-chain.
 </p>
 
@@ -287,7 +287,7 @@ fn generate_vote_proof(
     caller: &PrivateAccount,
     members: Vec&lt;NullifierPublicKey&gt;,
     proposal_index: u64,
-) -> (Vec&lt;u32&gt;, [u8; 32]) {
+) -> (Vec&lt;u8&gt;, [u8; 32]) {
     let prover = VoteProver::new(members);
     let (receipt, nullifier) = prover.generate_proof(
         &caller.nsk,
@@ -307,7 +307,7 @@ fn generate_vote_proof(
 <pre><code>pub fn handle(
     accounts: &[AccountWithMetadata],
     _proposal_index: u64,
-    vote_receipt: &[u32],
+    vote_receipt: &[u8],
     nullifier: [u8; 32],
 ) -> (Vec&lt;AccountPostState&gt;, Vec&lt;ChainedCall&gt;) {
     // Proof composition: verify vote circuit receipt on-chain
@@ -365,9 +365,10 @@ fn generate_vote_proof(
 &nbsp;&nbsp;nullifier = a3f91b2e4c8d7f1a...<br>
 &nbsp;&nbsp;tx_hash: <span class="tx">9c4a1f82b3d7e051</span><br>
 &nbsp;&nbsp;<span class="ok">✓ Proposal created (privacy TX)</span><br>
+&nbsp;&nbsp;<span class="dim">(proposer auto-approved — MEMBER1 already counted toward threshold)</span><br>
 <br>
 <span class="step">================================================================</span><br>
-<span class="step">  Step 7: MEMBER1 approves (ZK proof)</span><br>
+<span class="step">  Step 7: MEMBER2 approves (ZK proof)</span><br>
 <span class="step">================================================================</span><br>
 &nbsp;&nbsp;env::verify(VOTE_CIRCUIT_IMAGE_ID, &receipt) <span class="ok">✓</span><br>
 &nbsp;&nbsp;nullifier = 7d2e4a91f3c8b051...<br>
@@ -375,7 +376,7 @@ fn generate_vote_proof(
 &nbsp;&nbsp;<span class="ok">✓ Approved (privacy TX)</span><br>
 <br>
 <span class="step">================================================================</span><br>
-<span class="step">  Step 8: MEMBER2 approves (ZK proof — threshold met: 2-of-3)</span><br>
+<span class="step">  Step 8: MEMBER3 approves (ZK proof — threshold met: 2-of-3)</span><br>
 <span class="step">================================================================</span><br>
 &nbsp;&nbsp;env::verify(VOTE_CIRCUIT_IMAGE_ID, &receipt) <span class="ok">✓</span><br>
 &nbsp;&nbsp;nullifier = b1f4c2e8d3a9701f...<br>
@@ -432,7 +433,8 @@ let chained_call = ChainedCall {
 
 <ul>
   <li>
-    <strong>Proving is slow on weak hardware.</strong> On an i3-7100T (2 core / 4 thread, 2017),
+    <strong>Proving is slow on weak hardware.</strong> On an i3-7100T (2 core / 4 thread, 2017 —
+    basically a space heater at this point),
     total proving time is ~47 minutes per vote. On modern hardware this would be under a minute.
     The demo runs with <code>RISC0_DEV_MODE=1</code> for practical iteration —
     dev mode skips the actual proving but the circuit logic executes identically.
@@ -492,9 +494,11 @@ let chained_call = ChainedCall {
   </li>
   <li>
     <strong>The prover runs as a child process.</strong> When the r0vm prover is working,
-    the parent process shows ~0% CPU while <code>r0vm</code> runs at 400%. If you're
+    the parent process shows ~0% CPU while <code>r0vm</code> runs at 400%. I spent
+    an embarrassing amount of time thinking my code was hanging before I realized the
+    actual work was happening in a child process I wasn't watching. If you're
     monitoring resource usage and wondering why your process looks idle during proving —
-    that's why. <code>htop</code> will show the child process pegging all cores.
+    check <code>htop</code>. The child process is pegging all cores.
   </li>
   <li>
     <strong>Private accounts need default values at registration.</strong>
@@ -532,7 +536,7 @@ let chained_call = ChainedCall {
     Privacy routing ensures the hook-generated data flows through the private TX path.
   </li>
   <li>
-    <strong><a href="https://github.com/jimmy-claw/lez-multisig-framework" target="_blank">lez-multisig</a></strong>:
+    <strong><a href="https://github.com/jimmy-claw/lez-multisig" target="_blank">lez-multisig</a></strong>:
     the vote circuit guest binary, <code>env::verify</code> calls in propose/approve
     handlers, and the private caller signer integration.
   </li>
@@ -542,8 +546,8 @@ let chained_call = ChainedCall {
 
 <p>
   Multisig code is at
-  <a href="https://github.com/jimmy-claw/lez-multisig-framework/tree/jimmy/private-multisig-v2" target="_blank">
-    jimmy-claw/lez-multisig-framework @ jimmy/private-multisig-v2
+  <a href="https://github.com/jimmy-claw/lez-multisig/tree/jimmy/private-multisig-v2" target="_blank">
+    jimmy-claw/lez-multisig @ jimmy/private-multisig-v2
   </a>.
   The core pieces: <code>vote_circuit/</code> (ZK guest), <code>multisig_client/</code>
   (proof generation + pre_tx_hook), <code>multisig_program/src/approve.rs</code>
